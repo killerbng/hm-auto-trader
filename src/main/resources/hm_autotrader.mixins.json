@@ -1,0 +1,7 @@
+{
+  "required": true,
+  "package": "dev.hm.autotrader.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "client": ["AbstractContainerScreenAccessor", "MerchantScreenMixin"],
+  "injectors": { "defaultRequire": 1 }
+}

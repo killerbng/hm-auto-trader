@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "hm_autotrader",
+  "version": "${version}",
+  "name": "HM Auto-trader",
+  "description": "Standalone client-side villager trade favorites and automatic trading.",
+  "authors": ["HM"],
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["dev.hm.autotrader.HMAutoTraderClient"]
+  },
+  "mixins": ["hm_autotrader.mixins.json"],
+  "depends": {
+    "fabricloader": ">=0.19.3",
+    "minecraft": "${minecraft_version}",
+    "java": ">=25",
+    "fabric-api": "*"
+  }
+}
