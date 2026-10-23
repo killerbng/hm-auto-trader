@@ -1,22 +1,24 @@
-# HM Auto-trader 0.1.3 (Minecraft Java 26.2, Fabric)
+# HM Auto-trader 0.1.4 (Minecraft Java 26.2, Fabric)
 
 **Standalone client-side mod.** Name and mod ID are not tied to a server or network.
 No dependency on MaLiLib, Item Scroller, Autotrade Plus, Cloth Config or Mod Menu.
 Runtime requirements: **Fabric Loader + Fabric API** (as with many other Fabric mods).
 
-> STATUS: v0.1.2 was confirmed working by a user on Minecraft 26.2; **v0.1.3 changes are not yet compiled or game-tested** in the authoring environment (which lacks JDK 25 / downloadable Gradle). Test on a spare installation / world first. Keep a backup of the working v0.1.2 JAR.
+> STATUS: v0.1.2 was confirmed working by a user on Minecraft 26.2; **v0.1.4 changes are not yet compiled or game-tested** in the authoring environment (which lacks JDK 25 / downloadable Gradle). Test on a spare installation / world first. Keep a backup of the working v0.1.2 JAR.
 
 ## Build on Windows
 
 1. Extract the entire ZIP to a folder on the desktop.
 2. Double-click `BUILD-WINDOWS.bat`. It tries installed JDK 25/26 and Gradle 9.5.0 from the cache used by previous projects, otherwise downloads official Gradle.
-3. The compiled JAR, if successful, will appear in `build\libs\hm-auto-trader-0.1.3+26.2.jar`.
+3. The compiled JAR, if successful, will appear in `build\libs\hm-auto-trader-0.1.4+26.2.jar`.
 4. Install the compiled JAR into the **Fabric 26.2 client's** `mods` folder. Fabric API must be present.
 5. Temporarily remove **Item Scroller** and **Autotrade Plus** for testing, since both can intercept the same trade inputs. Keep Litematica, MiniHUD, Tweakeroo, and MaLiLib!
 
 If compilation fails, copy the **first error block** (not just the last BUILD FAILED line).
 
-**Alternative build:** The included `.github/workflows/build.yml` builds using GitHub Actions with JDK 25 and uploads the resulting mod JAR as a workflow artifact if you put this source in your own GitHub repository. No MaLiLib or Item Scroller dependencies are introduced by this route.
+**Alternative build:** GitHub Actions builds on `main` / `master` pushes or manual dispatch, and stores the JAR as a downloadable artifact. Pushing a tag matching the current version (e.g., `v0.1.4`) additionally publishes a **GitHub Release with the installable JAR attached**. Version `0.x` releases are initially marked prerelease. The tag must match `mod_version` without the `+26.2` suffix.
+
+A separate `.gitea/workflows/build.yml` is **build-only** and stores the JAR as an artifact. It does NOT publish Gitea releases. Gitea still requires a configured runner to execute; this project does not install or configure one.
 
 ## Controls
 
@@ -47,6 +49,7 @@ If compilation fails, copy the **first error block** (not just the last BUILD FA
 
 - `config/hm-autotrader.properties` (normal settings)
 - `config/hm-autotrader-favorites.json` (global favorite trades, editable JSON array)
+- `config/hm-autotrader-colors.json` (editable HEX colors for toggle chat messages; created automatically on first launch)
 - `config/hm-autotrader-favorites.txt` (old v0.1.2 file, retained unchanged after automatic first-launch import)
 
 ## Changes in v0.1.3
@@ -67,3 +70,22 @@ If compilation fails, copy the **first error block** (not just the last BUILD FA
 ## Updating to Minecraft 26.3
 
 See `PORTING-26.3.md`. Java networking and trading code is isolated in `TraderController.java`, screen interception is isolated in `mixin/MerchantScreenMixin.java`, and the Gradle/tool versions are all in `gradle.properties`.
+
+## Changes in v0.1.4 (uncompiled source update)
+
+The start/stop chat message now uses editable RGB `#RRGGBB` colors. The mod creates `config/hm-autotrader-colors.json` automatically on startup:
+
+```json
+{
+  "brackets": "#FFFFFF",
+  "name": "#FF55FF",
+  "enabled": "#55FF55",
+  "stopped": "#FF5555"
+}
+```
+
+Edit that file with Minecraft running if desired: colors reload the next time you **toggle trading**. Invalid hex entries use the previous hardcoded default for that field; malformed JSON is logged and not overwritten. No alpha channel, no traditional color-code limitations. Existing trade settings and favorites are unchanged.
+
+**GitHub:** version tags matching `gradle.properties` (for example, `v0.1.4`) trigger automated GitHub Releases with only the installable JAR. Regular pushes still upload a downloadable Actions artifact.
+
+**Gitea:** separate build-only workflow for future use; no Gitea release, no runner changes.

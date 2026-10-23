@@ -6,7 +6,6 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import org.lwjgl.glfw.GLFW;
@@ -15,6 +14,7 @@ public final class HMAutoTraderClient implements ClientModInitializer {
     public static final String MOD_ID = "hm_autotrader";
     public static final Settings SETTINGS = new Settings();
     public static final Favorites FAVORITES = new Favorites();
+    public static final ChatColors COLORS = new ChatColors();
     public static final TraderController TRADER = new TraderController();
     private static KeyMapping toggleKey;
     private static KeyMapping settingsKey;
@@ -23,6 +23,7 @@ public final class HMAutoTraderClient implements ClientModInitializer {
     public void onInitializeClient() {
         SETTINGS.load();
         FAVORITES.load();
+        COLORS.load();
         KeyMapping.Category category = KeyMapping.Category.register(
                 Identifier.fromNamespaceAndPath(MOD_ID, "keys"));
         toggleKey = KeyMappingHelper.registerKeyMapping(new KeyMapping(
@@ -58,12 +59,13 @@ public final class HMAutoTraderClient implements ClientModInitializer {
         TRADER.reset();
         Minecraft mc = Minecraft.getInstance();
         if (mc.player != null) {
+            COLORS.load(); // Pick up user edits without restarting Minecraft.
             mc.player.sendSystemMessage(
-                Component.literal("[").withStyle(ChatFormatting.WHITE)
-                    .append(Component.literal("HM Auto-trader").withStyle(ChatFormatting.LIGHT_PURPLE))
-                    .append(Component.literal("] ").withStyle(ChatFormatting.WHITE))
+                Component.literal("[").withStyle(style -> style.withColor(COLORS.brackets))
+                    .append(Component.literal("HM Auto-trader").withStyle(style -> style.withColor(COLORS.name)))
+                    .append(Component.literal("] ").withStyle(style -> style.withColor(COLORS.brackets)))
                     .append(Component.literal(enabled ? "Enabled" : "Stopped")
-                        .withStyle(enabled ? ChatFormatting.GREEN : ChatFormatting.RED))
+                        .withStyle(style -> style.withColor(enabled ? COLORS.enabled : COLORS.stopped)))
             );
         }
     }
