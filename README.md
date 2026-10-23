@@ -1,22 +1,22 @@
-# HM Auto-trader 0.1.4 (Minecraft Java 26.2, Fabric)
+# HM Auto-trader 0.1.5 (Minecraft Java 26.2, Fabric)
 
 **Standalone client-side mod.** Name and mod ID are not tied to a server or network.
 No dependency on MaLiLib, Item Scroller, Autotrade Plus, Cloth Config or Mod Menu.
 Runtime requirements: **Fabric Loader + Fabric API** (as with many other Fabric mods).
 
-> STATUS: v0.1.2 was confirmed working by a user on Minecraft 26.2; **v0.1.4 changes are not yet compiled or game-tested** in the authoring environment (which lacks JDK 25 / downloadable Gradle). Test on a spare installation / world first. Keep a backup of the working v0.1.2 JAR.
+> STATUS: v0.1.2 was confirmed working by a user on Minecraft 26.2; **v0.1.5 changes are not yet compiled or game-tested** in the authoring environment (which lacks JDK 25 / downloadable Gradle). Test on a spare installation / world first. Keep a backup of the working v0.1.2 JAR.
 
 ## Build on Windows
 
 1. Extract the entire ZIP to a folder on the desktop.
 2. Double-click `BUILD-WINDOWS.bat`. It tries installed JDK 25/26 and Gradle 9.5.0 from the cache used by previous projects, otherwise downloads official Gradle.
-3. The compiled JAR, if successful, will appear in `build\libs\hm-auto-trader-0.1.4+26.2.jar`.
+3. The compiled JAR, if successful, will appear in `build\libs\hm-auto-trader-0.1.5+26.2.jar`.
 4. Install the compiled JAR into the **Fabric 26.2 client's** `mods` folder. Fabric API must be present.
 5. Temporarily remove **Item Scroller** and **Autotrade Plus** for testing, since both can intercept the same trade inputs. Keep Litematica, MiniHUD, Tweakeroo, and MaLiLib!
 
 If compilation fails, copy the **first error block** (not just the last BUILD FAILED line).
 
-**Alternative build:** GitHub Actions builds on `main` / `master` pushes or manual dispatch, and stores the JAR as a downloadable artifact. Pushing a tag matching the current version (e.g., `v0.1.4`) additionally publishes a **GitHub Release with the installable JAR attached**. Version `0.x` releases are initially marked prerelease. The tag must match `mod_version` without the `+26.2` suffix.
+**Alternative build:** GitHub Actions builds on `main` / `master` pushes or manual dispatch, and stores the JAR as a downloadable artifact. Pushing a tag matching the current version (e.g., `v0.1.5`) additionally publishes a **GitHub Release with the installable JAR attached**. Version `0.x` releases are initially marked prerelease. The tag must match `mod_version` without the `+26.2` suffix.
 
 A separate `.gitea/workflows/build.yml` is **build-only** and stores the JAR as an artifact. It does NOT publish Gitea releases. Gitea still requires a configured runner to execute; this project does not install or configure one.
 
@@ -79,6 +79,7 @@ The start/stop chat message now uses editable RGB `#RRGGBB` colors. The mod crea
 {
   "brackets": "#FFFFFF",
   "name": "#FF55FF",
+  "nameBold": true,
   "enabled": "#55FF55",
   "stopped": "#FF5555"
 }
@@ -86,6 +87,14 @@ The start/stop chat message now uses editable RGB `#RRGGBB` colors. The mod crea
 
 Edit that file with Minecraft running if desired: colors reload the next time you **toggle trading**. Invalid hex entries use the previous hardcoded default for that field; malformed JSON is logged and not overwritten. No alpha channel, no traditional color-code limitations. Existing trade settings and favorites are unchanged.
 
-**GitHub:** version tags matching `gradle.properties` (for example, `v0.1.4`) trigger automated GitHub Releases with only the installable JAR. Regular pushes still upload a downloadable Actions artifact.
+**GitHub:** version tags matching `gradle.properties` (for example, `v0.1.5`) trigger automated GitHub Releases with only the installable JAR. Regular pushes still upload a downloadable Actions artifact.
 
 **Gitea:** separate build-only workflow for future use; no Gitea release, no runner changes.
+
+## Changes in v0.1.5 (source update)
+
+- The chat prefix's name can now be **bold** independently of its HEX color.
+- `config/hm-autotrader-colors.json` contains `"nameBold": true` by default; set to `false` for normal-weight text. The setting is reloaded before each on/off chat message.
+- Existing v0.1.4 color files are upgraded in place to include the new flag without resetting custom HEX values. Keep a backup if you prefer to retain your original JSON formatting.
+- The bracket and status text formatting remains unchanged; this setting only changes `HM Auto-trader`.
+- GitHub tag-to-release and Gitea build-only automation remain unchanged.

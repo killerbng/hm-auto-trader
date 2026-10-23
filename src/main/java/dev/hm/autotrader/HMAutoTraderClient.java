@@ -62,7 +62,7 @@ public final class HMAutoTraderClient implements ClientModInitializer {
             COLORS.load(); // Pick up user edits without restarting Minecraft.
             mc.player.sendSystemMessage(
                 Component.literal("[").withStyle(style -> style.withColor(COLORS.brackets))
-                    .append(Component.literal("HM Auto-trader").withStyle(style -> style.withColor(COLORS.name)))
+                    .append(Component.literal("HM Auto-trader").withStyle(style -> style.withColor(COLORS.name).withBold(COLORS.nameBold)))
                     .append(Component.literal("] ").withStyle(style -> style.withColor(COLORS.brackets)))
                     .append(Component.literal(enabled ? "Enabled" : "Stopped")
                         .withStyle(style -> style.withColor(enabled ? COLORS.enabled : COLORS.stopped)))

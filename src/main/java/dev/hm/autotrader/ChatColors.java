@@ -23,6 +23,7 @@ public final class ChatColors {
 
     public int brackets = DEFAULT_BRACKETS;
     public int name = DEFAULT_NAME;
+    public boolean nameBold = true;
     public int enabled = DEFAULT_ENABLED;
     public int stopped = DEFAULT_STOPPED;
 
@@ -34,6 +35,7 @@ public final class ChatColors {
     public void load() {
         brackets = DEFAULT_BRACKETS;
         name = DEFAULT_NAME;
+        nameBold = true;
         enabled = DEFAULT_ENABLED;
         stopped = DEFAULT_STOPPED;
         Path file = path();
@@ -47,12 +49,30 @@ public final class ChatColors {
             JsonObject values = root.getAsJsonObject();
             brackets = readColor(values, "brackets", DEFAULT_BRACKETS);
             name = readColor(values, "name", DEFAULT_NAME);
+            nameBold = readBoolean(values, "nameBold", true);
+            // Existing v0.1.4 installations already have a colors file: expose the new setting
+            // without removing or resetting any of the user's own color values.
+            if (!values.has("nameBold")) {
+                values.addProperty("nameBold", nameBold);
+                Files.writeString(file, JSON.toJson(values) + System.lineSeparator(), StandardCharsets.UTF_8);
+            }
             enabled = readColor(values, "enabled", DEFAULT_ENABLED);
             stopped = readColor(values, "stopped", DEFAULT_STOPPED);
         } catch (IOException | RuntimeException ex) {
             // Never overwrite or discard an invalid user-edited file.
             System.err.println("[HM Auto-trader] Invalid colors file " + file + ": " + ex + "; using defaults");
         }
+    }
+
+    private static boolean readBoolean(JsonObject values, String name, boolean fallback) {
+        JsonElement value = values.get(name);
+        if (value == null || !value.isJsonPrimitive() || !value.getAsJsonPrimitive().isBoolean()) {
+            if (value != null) {
+                System.err.println("[HM Auto-trader] Invalid boolean for '" + name + "' (expected true or false)");
+            }
+            return fallback;
+        }
+        return value.getAsBoolean();
     }
 
     private static int readColor(JsonObject values, String name, int fallback) {
@@ -70,6 +90,7 @@ public final class ChatColors {
         JsonObject values = new JsonObject();
         values.addProperty("brackets", "#FFFFFF");
         values.addProperty("name", "#FF55FF");
+        values.addProperty("nameBold", true);
         values.addProperty("enabled", "#55FF55");
         values.addProperty("stopped", "#FF5555");
         try {
