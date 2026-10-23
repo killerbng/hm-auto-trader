@@ -27,9 +27,8 @@ public final class SettingsScreen extends Screen {
                 .bounds(c - 115, y, 230, 20).build()).active = false;
         y += 24;
         addRenderableWidget(Button.builder(Component.literal("Trading: " + (cfg.enabled ? "ON - click to STOP" : "OFF - click to START")), b -> {
-            cfg.enabled = !cfg.enabled;
-            HMAutoTraderClient.TRADER.reset();
-            saveRefresh();
+            HMAutoTraderClient.setEnabled(!cfg.enabled);
+            rebuildWidgets();
         }).bounds(c - 115, y, 230, 20).build());
         y += 24;
         addRenderableWidget(Button.builder(Component.literal("Profession: " + cfg.profession.replace("minecraft:", "")), b -> {
@@ -39,11 +38,11 @@ public final class SettingsScreen extends Screen {
             saveRefresh();
         }).bounds(c - 115, y, 230, 20).build());
         y += 24;
-        addRenderableWidget(Button.builder(Component.literal("Range: " + cfg.range + " blocks (-)"), b -> {
-            cfg.range = Math.max(2, cfg.range - .5); saveRefresh();
+        addRenderableWidget(Button.builder(Component.literal("Scan: " + cfg.range + " (-)"), b -> {
+            cfg.range = Math.max(2, cfg.range > 6 ? cfg.range - 2 : cfg.range - .5); saveRefresh();
         }).bounds(c - 115, y, 112, 20).build());
-        addRenderableWidget(Button.builder(Component.literal("Range (+)"), b -> {
-            cfg.range = Math.min(6, cfg.range + .5); saveRefresh();
+        addRenderableWidget(Button.builder(Component.literal("Scan radius (+)"), b -> {
+            cfg.range = Math.min(32, cfg.range >= 6 ? cfg.range + 2 : cfg.range + .5); saveRefresh();
         }).bounds(c + 3, y, 112, 20).build());
         y += 24;
         addRenderableWidget(Button.builder(Component.literal("Click delay: " + cfg.clickDelayTicks + "t (-)"), b -> {

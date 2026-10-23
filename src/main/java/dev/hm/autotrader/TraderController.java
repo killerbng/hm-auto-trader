@@ -57,7 +57,7 @@ public final class TraderController {
             return;
         }
         if (HMAutoTraderClient.FAVORITES.size() == 0) {
-            config.enabled = false;
+            HMAutoTraderClient.setEnabled(false);
             HMAutoTraderClient.status("No favorites saved. Shift + middle-click merchant trade rows.");
             return;
         }
@@ -108,7 +108,7 @@ public final class TraderController {
             }
             // Don't initiate a transaction that could spill items on the ground.
             if (config.stopIfFull && !canFit(mc.player, menu.getOffers().get(activeOffer).getResult())) {
-                config.enabled = false;
+                HMAutoTraderClient.setEnabled(false);
                 HMAutoTraderClient.status("Stopped: not enough inventory room");
                 return;
             }
@@ -129,7 +129,7 @@ public final class TraderController {
             ItemStack output = menu.getSlot(2).getItem();
             if (!output.isEmpty() && ItemStack.isSameItem(output, menu.getOffers().get(activeOffer).getResult())) {
                 if (config.stopIfFull && !canFit(mc.player, output)) {
-                    config.enabled = false;
+                    HMAutoTraderClient.setEnabled(false);
                     HMAutoTraderClient.status("Stopped: inventory full");
                     return;
                 }
@@ -165,7 +165,12 @@ public final class TraderController {
         if (player == null) return;
         AABB area = player.getBoundingBox().inflate(config.range);
         List<Villager> nearby = mc.level.getEntitiesOfClass(Villager.class, area,
-                v -> v.isAlive() && v.distanceTo(player) <= config.range && professionAllowed(v, config));
+                v -> v.isAlive()
+                        && v.distanceTo(player) <= config.range
+                        // Server-controlled reach (normally 3 blocks in Survival).
+                        // A larger scan radius never bypasses this check.
+                        && player.isWithinEntityInteractionRange(v, 0.0)
+                        && professionAllowed(v, config));
         nearby.sort(Comparator.comparingDouble(v -> v.distanceToSqr(player)));
         for (Villager villager : nearby) {
             if (visited.contains(villager.getUUID())) continue;

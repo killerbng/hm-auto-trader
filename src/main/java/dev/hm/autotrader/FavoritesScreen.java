@@ -25,7 +25,7 @@ public final class FavoritesScreen extends Screen {
             String b = "-".equals(parts[1]) ? "" : " + " + shortId(parts[1]);
             String result = shortId(parts[2]);
             int rowY = y + (i - offset) * 23;
-            addRenderableWidget(Button.builder(Component.literal(a + b + " -> " + result), button -> {})
+            addRenderableWidget(Button.builder(Component.literal(a + b + " => " + result), button -> {})
                  .bounds(c - 148, rowY, 238, 20).build()).active = false;
             addRenderableWidget(Button.builder(Component.literal("X"), button -> {
                 HMAutoTraderClient.FAVORITES.remove(entry);

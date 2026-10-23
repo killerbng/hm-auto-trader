@@ -12,7 +12,7 @@ import net.fabricmc.loader.api.FabricLoader;
 public final class Settings {
     public boolean enabled = false;
     public String profession = "minecraft:cleric";
-    public double range = 4.5;
+    public double range = 4.5; // Scan radius only; actual interaction range is server-enforced.
     public int clickDelayTicks = 4;
     public int villagerDelayTicks = 20;
     public int roundDelayTicks = 200;
@@ -32,7 +32,7 @@ public final class Settings {
         try { roundDelayTicks = Integer.parseInt(props.getProperty("roundDelayTicks", "200")); } catch (NumberFormatException ignored) {}
         closeAfterVillager = Boolean.parseBoolean(props.getProperty("closeAfterVillager", "true"));
         stopIfFull = Boolean.parseBoolean(props.getProperty("stopIfFull", "true"));
-        range = Math.max(2, Math.min(6, range));
+        range = Math.max(2, Math.min(32, range));
         clickDelayTicks = Math.max(2, Math.min(20, clickDelayTicks));
         villagerDelayTicks = Math.max(5, Math.min(200, villagerDelayTicks));
         roundDelayTicks = Math.max(40, Math.min(2400, roundDelayTicks));
